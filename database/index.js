@@ -5,27 +5,39 @@ const books = [{
     language: "en",
     publishDate: "2022-01-27",
     numOfPages: 100,
-    category: ["Fiction, Drama, Love, Romance"],
+    category: ["Fiction", "Drama", "Mythology"],
     publication: 1
-}];
+},
+{
+    ISBN: "2",
+    title: "Puranas",
+    authors: [1, 2],
+    language: "en",
+    publishDate: "2022-01-27",
+    numOfPages: 100,
+    category: ["Fiction", "Drama", "Mythology"],
+    publication: 1
+}
+];
 
 const authors = [
     {
         id: 1,
         name: "Aryabhatta",
-        books: ["1"]
+        books: ["1","2"]
     },
     {
         id: 2,
         name: "Veda Vyas",
-        books: ["1"],
+        books: ["2"],
     }
 ];
 
 const publications = [
     {
         id:1,
-        name:"Geetha Press"
+        name:"Geetha Press",
+        books:["1"]
     }];
 
     module.exports={books, authors, publications};

@@ -1,7 +1,18 @@
 We will be handling the book datas.
 
-Books
+Books: API to get:-
+-all the Books
+-specific book using ISBN
+-specific books based on the category
+-specific books based on the Authors
 
-Authors
 
-Publications
+Authors: API to get:-
+-all the Authors
+-specific Author using id
+-authors based on the book ISBN
+
+Publications: API to get:-
+-all the Publications
+-specific Publication based on the id
+-specific Publications based on the book's ISBN
