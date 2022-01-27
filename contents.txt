@@ -1,0 +1,7 @@
+We will be handling the book datas.
+
+Books
+
+Authors
+
+Publications
