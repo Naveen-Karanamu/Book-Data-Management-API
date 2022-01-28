@@ -1,18 +1,47 @@
 We will be handling the book datas.
 
-Books: API to get:-
+Books: API to :-
+GET:
 -all the Books
 -specific book using ISBN
 -specific books based on the category
 -specific books based on the Authors
 
+POST:
+-New book added
 
-Authors: API to get:-
+PUT:
+-Book title updated
+-Updated the author details in books db and books details in author db
+
+DELETE:
+
+-------------------------------------------------------------------------
+
+Authors: API to :-
+GET:
 -all the Authors
 -specific Author using id
 -authors based on the book ISBN
 
-Publications: API to get:-
+POST:
+-New Author added
+
+PUT:
+
+DELETE:
+
+-------------------------------------------------------------------------
+
+Publications: API to :-
+GET:
 -all the Publications
 -specific Publication based on the id
 -specific Publications based on the book's ISBN
+
+POST:
+-New Publication added
+
+PUT:
+
+DELETE: 

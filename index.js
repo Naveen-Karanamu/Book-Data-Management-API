@@ -166,3 +166,95 @@ knk.get("/pub/b/:isbn",(req,res)=>{
 
     return(res.json({publications:getPublications}));
 })
+
+//---------------------------------------------------------------------- 
+
+/*
+Route: /book/new
+Description: to add a book data
+Access: public
+Parameters: NONE
+Method: POST
+*/
+knk.post("/book/new",(req,res)=>{
+    const newbook=req.body.newbook;
+
+    database.books.push(newbook);
+
+    return res.json({books:database.books, message:"Book is added"});
+})
+
+/*
+Route: /author/new
+Description: to add a author data
+Access: public
+Parameters: NONE
+Method: POST
+*/
+knk.post("/author/new",(req,res)=>{
+    const newAuthor=req.body.newAuthor;
+
+    database.authors.push(newAuthor);
+
+    return(res.json({authors:database.authors,message:"Author added"}));
+})
+
+/*
+Route: /pub/new
+Description: to add a publication data
+Access: public
+Parameters: NONE
+Method: POST
+*/
+knk.post("/pub/new",(req,res)=>{
+    const newPublication=req.body.newPublication;
+
+    database.publications.push(newPublication);
+
+    return (res.json({publication:database.publications,message:"New publication added"})); 
+})
+
+//---------------------------------------------------------------------- 
+
+/*
+Route: /book/update
+Description: to update the book title
+Access: public
+Parameters: /:isbn
+Method: PUT
+*/
+knk.put("/book/update/:isbn",(req,res)=>{
+    database.books.forEach((book)=>{
+        if(book.ISBN===req.params.isbn){
+            book.title=req.body.bookTitle
+            return;
+        }
+    });
+
+    return(res.json({book:database.books,message:"Book's title updated"}));
+})
+
+/*
+Route: /book/author/update
+Description: to update the author of the book aS well as the book of the author
+Access: public
+Parameters: /:isbn
+Method: PUT
+*/
+knk.put("/book/author/update/:isbn",(req,res)=>{
+    // Updating the book data
+    database.books.forEach((book)=>{
+        if(book.ISBN===req.params.isbn){ 
+            return(book.authors.push(req.body.newAuthor));
+        }
+    });
+
+    // Updating the author data
+    database.authors.forEach((author)=>{
+        if(author.id===req.body.newAuthor){
+            return(author.books.push(req.params.isbn));
+        }
+    });
+
+    return(res.json({books:database.books, authors:database.authors, message:"Updated the book authors"}));
+})
