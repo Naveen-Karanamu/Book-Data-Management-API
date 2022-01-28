@@ -15,6 +15,8 @@ PUT:
 -Updated the author details in books db and books details in author db
 
 DELETE:
+-A specific book
+-An author is deleted from the book and book is deleted from the authors
 
 -------------------------------------------------------------------------
 
@@ -31,6 +33,7 @@ PUT:
 -Author name updated
 
 DELETE:
+-Author deleted
 
 -------------------------------------------------------------------------
 
@@ -47,4 +50,6 @@ PUT:
 -Publication name updated
 -Updated the book data in the Publications and Publication data in the books
 
-DELETE: 
+DELETE:
+-Publication deleted
+-deleted book from the Publication and Publication from the book 
