@@ -258,3 +258,63 @@ knk.put("/book/author/update/:isbn",(req,res)=>{
 
     return(res.json({books:database.books, authors:database.authors, message:"Updated the book authors"}));
 })
+
+/*
+Route: /author/update
+Description: to update the author name
+Access: public
+Parameters: /:id
+Method: PUT
+*/
+knk.put("/author/update/:id",(req,res)=>{
+    database.authors.forEach((author)=>{
+        if(author.id===parseInt(req.params.id)){
+            author.name=req.body.newAuthorName;
+            return;
+        }
+    });
+    return(res.json({authors:database.authors,message:"Author name updated"}));
+}) 
+
+/*
+Route: /pub/update
+Description: to update the publication name
+Access: public
+Parameters: /:id
+Method: PUT
+*/
+knk.put("/pub/update/:id",(req,res)=>{
+    database.publications.forEach((publication)=>{
+        if(publication.id===parseInt(req.params.id)){
+            publication.name=req.body.newPublicationName;
+            return;
+        }
+    });
+    return(res.json({publications:database.publications,message:"publication name updated"}));
+}) 
+
+/*
+Route: /pub/update
+Description: to update the publication name
+Access: public
+Parameters: /:id
+Method: PUT
+*/
+knk.put("/pub/book/update/:id",(req,res)=>{
+    // updating the publications data
+    database.publications.forEach((publication)=>{
+        if(publication.id===parseInt(req.params.id)){
+            return publication.books.push(req.body.newPubBook);
+        }
+    });
+
+    // updating the book data
+    database.books.forEach((book)=>{
+        if(book.ISBN===req.body.newPubBook){
+            book.publication=req.params.id;
+            return;
+        }
+    });
+
+    return(res.json({publications:database.publications,books:database.books,message:"Publications book data updated"}));
+})

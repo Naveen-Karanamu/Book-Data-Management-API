@@ -28,6 +28,7 @@ POST:
 -New Author added
 
 PUT:
+-Author name updated
 
 DELETE:
 
@@ -43,5 +44,7 @@ POST:
 -New Publication added
 
 PUT:
+-Publication name updated
+-Updated the book data in the Publications and Publication data in the books
 
 DELETE: 
