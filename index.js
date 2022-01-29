@@ -1,6 +1,10 @@
+// requiring env
+require("dotenv").config();
+
 // Imported the express framework
 const express = require("express");
 const { parse } = require("nodemon/lib/cli");
+const mongoose=require("mongoose");
 
 // Database
 const database = require("./database/index");
@@ -10,6 +14,10 @@ const knk = express();
 
 // Configurations
 knk.use(express.json());
+
+// establishing database connection
+mongoose.connect(process.env.MONGODB_URL).then(()=>console.log("Connection established"));
+
 
 // Porting
 knk.listen(3000, () => console.log("Server Running"));
