@@ -13,6 +13,7 @@ const database = require("./database/index");
 const BookModel = require("./database/book");
 const AuthorModel = require("./database/author");
 const PublicationModel = require("./database/publication");
+const AuthrorModel = require("./database/author");
 
 // Initializing
 const knk = express();
@@ -34,8 +35,9 @@ Access: public
 Parameters: NONE
 Method: GET
 */
-knk.get("/", (req, res) => {
-    return res.json({ books: database.books })
+knk.get("/", async(req, res) => {
+    const getAllBooks=await BookModel.find();
+return res.json({ books: /*database.books*/ getAllBooks})
 })
 
 /*
@@ -45,10 +47,12 @@ Access: public
 Parameters: ISBN
 Method: GET
 */
-knk.get("/b/:isbn", (req, res) => {
-    const getSpecificBook = database.books.filter((book) => book.ISBN === req.params.isbn);
+knk.get("/b/:isbn",async (req, res) => {
+    // const getSpecificBook = database.books.filter((book) => book.ISBN === req.params.isbn);
 
-    if (getSpecificBook.length === 0) {
+    const getSpecificBook =await BookModel.findOne({ISBN:req.params.isbn});
+
+    if (/*getSpecificBook.length === 0*/!getSpecificBook) {
         return res.json({ error: `Book not found of the ISBN : ${req.params.isbn}` })
     }
 
@@ -57,16 +61,18 @@ knk.get("/b/:isbn", (req, res) => {
 
 /*
 Route: /c
-Description: to get specific books
+Description: to get specific books based on category
 Access: public
 Parameters: category
 Method: GET
 */
 
-knk.get("/c/:category", (req, res) => {
-    const getSpecificBooks = database.books.filter((book) => book.category.includes(req.params.category));
+knk.get("/c/:category", async(req, res) => {
+    // const getSpecificBooks = database.books.filter((book) => book.category.includes(req.params.category));
 
-    if (getSpecificBooks.length === 0) {
+    const getSpecificBooks =await BookModel.findOne({category:req.params.category})
+
+    if (!getSpecificBooks) {
         return res.json({ error: `Book not found of the category : ${req.params.category}` })
     }
 
@@ -81,10 +87,12 @@ Parameters: authors
 Method: GET
 */
 
-knk.get("/a/:author", (req, res) => {
-    const getSpecificBooks = database.books.filter((book) => book.authors.includes(parseInt(req.params.author)));
+knk.get("/a/:author", async(req, res) => {
+    // const getSpecificBooks = database.books.filter((book) => book.authors.includes(parseInt(req.params.author)));
 
-    if (getSpecificBooks.length === 0) {
+    const getSpecificBooks=await BookModel.findOne({authors:req.params.author})
+
+    if (!getSpecificBooks) {
         res.json({ error: `Books not found for the author : ${req.params.author}` });
     }
 
@@ -98,8 +106,9 @@ Access: public
 Parameters: NONE
 Method: GET
 */
-knk.get("/auth", (req, res) => {
-    return res.json({ authors: database.authors });
+knk.get("/auth", async(req, res) => {
+    const getAllAuthors=await AuthrorModel.find()
+    return res.json({ authors: getAllAuthors});
 })
 
 /*
@@ -109,10 +118,12 @@ Access: public
 Parameters: /:id
 Method: GET
 */
-knk.get("/auth/:id", (req, res) => {
-    const getSpecificAuthor = database.authors.filter((author) => author.id === parseInt(req.params.id))
+knk.get("/auth/:id", async(req, res) => {
+    // const getSpecificAuthor = database.authors.filter((author) => author.id === parseInt(req.params.id))
 
-    if (getSpecificAuthor.length === 0) {
+    const getSpecificAuthor =await AuthrorModel.findOne({id:req.params.id})
+
+    if (!getSpecificAuthor) {
         return res.json({ error: `Author not found of the id : ${req.params.id}` })
     }
 
@@ -126,8 +137,10 @@ Access: public
 Parameters: /:isbn
 Method: GET
 */
-knk.get("/auth/b/:isbn", (req, res) => {
-    const getAuthors = database.authors.filter((author) => author.books.includes(req.params.isbn));
+knk.get("/auth/b/:isbn", async(req, res) => {
+    // const getAuthors = database.authors.filter((author) => author.books.includes(req.params.isbn));
+
+    const getAuthors=await AuthrorModel.findOne({books:req.params.isbn})
 
     if (getAuthors.length === 0) {
         res.json({ error: `Author not found for the book with ISBN : ${req.params.isbn}` })
@@ -143,8 +156,9 @@ Access: public
 Parameters: NONE
 Method: GET
 */
-knk.get("/pub", (req, res) => {
-    return (res.json({ publications: database.publications }));
+knk.get("/pub",async (req, res) => {
+    const getAllPublications=await PublicationModel.find();
+    return (res.json({ publications: getAllPublications}));
 })
 
 /*
@@ -154,10 +168,12 @@ Access: public
 Parameters: /:id
 Method: GET
 */
-knk.get("/pub/:id", (req, res) => {
-    const getSpecificPublication = database.publications.filter((publication) => publication.id === parseInt(req.params.id));
+knk.get("/pub/:id", async(req, res) => {
+    // const getSpecificPublication = database.publications.filter((publication) => publication.id === parseInt(req.params.id));
 
-    if (getSpecificPublication.length === 0) {
+    const getSpecificPublication = await PublicationModel.findOne({id:req.params.id})
+
+    if (!getSpecificPublication) {
         return (res.json({ error: `Publications not found of the id : ${req.params.id}` }))
     }
 
@@ -166,15 +182,17 @@ knk.get("/pub/:id", (req, res) => {
 
 /*
 Route: /pub
-Description: to get a specific publiction
+Description: to get a specific publiction based on book
 Access: public
 Parameters: /:isbn
 Method: GET
 */
-knk.get("/pub/b/:isbn", (req, res) => {
-    const getPublications = database.publications.filter((publication) => publication.books.includes(req.params.isbn))
+knk.get("/pub/b/:isbn",async (req, res) => {
+    // const getPublications = database.publications.filter((publication) => publication.books.includes(req.params.isbn))
 
-    if (getPublications.length === 0) {
+    const getPublications = await PublicationModel.findOne({books:req.params.isbn})
+
+    if (!getPublications) {
         return (res.json({ error: `Publications not found for the book of ISBN : ${req.params.isbn}` }))
     }
 
@@ -190,12 +208,13 @@ Access: public
 Parameters: NONE
 Method: POST
 */
-knk.post("/book/new", (req, res) => {
-    const newbook = req.body.newbook;
+knk.post("/book/new",async (req, res) => {
+    const newbook = req.body.newbook; /*const {newbook}=req.bodu*/
 
-    database.books.push(newbook);
+    // database.books.push(newbook);
+    const addNewBook=await BookModel.create(newbook);
 
-    return res.json({ books: database.books, message: "Book is added" });
+    return res.json({ books: addNewBook, message: "Book is added" });
 })
 
 /*
@@ -205,12 +224,13 @@ Access: public
 Parameters: NONE
 Method: POST
 */
-knk.post("/author/new", (req, res) => {
+knk.post("/author/new", async(req, res) => {
     const newAuthor = req.body.newAuthor;
 
-    database.authors.push(newAuthor);
+    // database.authors.push(newAuthor);
+    const addNewAuthor=await AuthrorModel.create(newAuthor);
 
-    return (res.json({ authors: database.authors, message: "Author added" }));
+    return (res.json({ authors: addNewAuthor, message: "Author added" }));
 })
 
 /*
@@ -223,7 +243,8 @@ Method: POST
 knk.post("/pub/new", (req, res) => {
     const newPublication = req.body.newPublication;
 
-    database.publications.push(newPublication);
+    // database.publications.push(newPublication);
+    const addNewPub=PublicationModel.create(newPublication);
 
     return (res.json({ publication: database.publications, message: "New publication added" }));
 })
