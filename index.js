@@ -246,7 +246,7 @@ knk.post("/pub/new", (req, res) => {
     // database.publications.push(newPublication);
     const addNewPub=PublicationModel.create(newPublication);
 
-    return (res.json({ publication: database.publications, message: "New publication added" }));
+    return (res.json({ publication: addNewPub, message: "New publication added" }));
 })
 
 //---------------------------------------------------------------------- 
