@@ -66,13 +66,17 @@ Access: public
 Parameters: NONE
 Method: POST
 */
-Router.post("/pub/new", (req, res) => {
-    const newPublication = req.body.newPublication;
+Router.post("/pub/new",async (req, res) => {
+    try{
+        const newPublication = req.body.newPublication;
 
     // database.publications.push(newPublication);
-    const addNewPub = PublicationModel.create(newPublication);
+    const addNewPub =await PublicationModel.create(newPublication);
 
     return (res.json({ publication: addNewPub, message: "New publication added" }));
+    }catch(error){
+        return(res.json({error:error.message}))
+    }
 })
 
 //---------------------------------------------------------------------- 
