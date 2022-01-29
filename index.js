@@ -4,10 +4,15 @@ require("dotenv").config();
 // Imported the express framework
 const express = require("express");
 const { parse } = require("nodemon/lib/cli");
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 
 // Database
 const database = require("./database/index");
+
+// Models
+const BookModel = require("./database/book");
+const AuthorModel = require("./database/author");
+const PublicationModel = require("./database/publication");
 
 // Initializing
 const knk = express();
@@ -16,7 +21,7 @@ const knk = express();
 knk.use(express.json());
 
 // establishing database connection
-mongoose.connect(process.env.MONGODB_URL).then(()=>console.log("Connection established"));
+mongoose.connect(process.env.MONGODB_URL).then(() => console.log("Connection established"));
 
 
 // Porting
@@ -436,12 +441,12 @@ knk.delete("/pub/book/delete/:id/:isbn", (req, res) => {
     });
 
     // update the book database
-   database.books.forEach((book)=>{
-       if(book.ISBN===req.params.isbn){
-           return book.publication=0;
-       }
-   })
+    database.books.forEach((book) => {
+        if (book.ISBN === req.params.isbn) {
+            return book.publication = 0;
+        }
+    })
 
 
-return (res.json({ publications: database.publications, books: database.books, message: "Books deleted from the publications" }));
+    return (res.json({ publications: database.publications, books: database.books, message: "Books deleted from the publications" }));
 })
