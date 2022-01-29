@@ -4,21 +4,21 @@ const mongoose = require("mongoose");
 const BookSchema = mongoose.Schema({
     ISBN: {
         type: String,
-        require: true
+        required: true
     },
     title: {
         type: String,
-        require: true
+        required: true
     },
     authors: [Number],
     language: String,
     publishDate: {
         type: String,
-        require: true
+        required: true
     },
     numOfPages: {
         type: Number,
-        require: true
+        required: true
     },
     category: [String],
     publication: Number
