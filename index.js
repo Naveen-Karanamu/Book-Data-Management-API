@@ -316,7 +316,7 @@ knk.put("/book/author/update/:isbn", async (req, res) => {
     //     }
     // });
 
-    const updateAuthor =await  AuthrorModel.findOneAndUpdate({
+    const updateAuthor = await AuthrorModel.findOneAndUpdate({
         id: req.body.newAuthor
     },
         {
@@ -327,7 +327,7 @@ knk.put("/book/author/update/:isbn", async (req, res) => {
         new: true
     })
 
-    return (res.json({ books:updateBook, authors: updateAuthor, message: "Updated the book authors" }));
+    return (res.json({ books: updateBook, authors: updateAuthor, message: "Updated the book authors" }));
 })
 
 /*
@@ -337,7 +337,7 @@ Access: public
 Parameters: /:id
 Method: PUT
 */
-knk.put("/author/update/:id",async (req, res) => {
+knk.put("/author/update/:id", async (req, res) => {
     // database.authors.forEach((author) => {
     //     if (author.id === parseInt(req.params.id)) {
     //         author.name = req.body.newAuthorName;
@@ -345,13 +345,13 @@ knk.put("/author/update/:id",async (req, res) => {
     //     }
     // });
 
-    const updateAuth=await  AuthorModel.findOneAndUpdate({
-        id:req.params.id
-    },{
-        name:req.body.newAuthorName
-    },{
-        new:true
-    }) 
+    const updateAuth = await AuthorModel.findOneAndUpdate({
+        id: req.params.id
+    }, {
+        name: req.body.newAuthorName
+    }, {
+        new: true
+    })
 
     return (res.json({ authors: updateAuth, message: "Author name updated" }));
 })
@@ -363,7 +363,7 @@ Access: public
 Parameters: /:id
 Method: PUT
 */
-knk.put("/pub/update/:id",async (req, res) => {
+knk.put("/pub/update/:id", async (req, res) => {
     // database.publications.forEach((publication) => {
     //     if (publication.id === parseInt(req.params.id)) {
     //         publication.name = req.body.newPublicationName;
@@ -371,15 +371,15 @@ knk.put("/pub/update/:id",async (req, res) => {
     //     }
     // });
 
-    const updatePub=await PublicationModel.findOneAndUpdate({
-        id:req.params.id
-    },{
-        name:req.body.newPublicationName
-    },{
-        new:true
+    const updatePub = await PublicationModel.findOneAndUpdate({
+        id: req.params.id
+    }, {
+        name: req.body.newPublicationName
+    }, {
+        new: true
     })
 
-    return (res.json({ publications:updatePub, message: "publication name updated" }));
+    return (res.json({ publications: updatePub, message: "publication name updated" }));
 })
 
 /*
@@ -389,7 +389,7 @@ Access: public
 Parameters: /:id
 Method: PUT
 */
-knk.put("/pub/book/update/:id",async (req, res) => {
+knk.put("/pub/book/update/:id", async (req, res) => {
     // updating the publications data
 
     // database.publications.forEach((publication) => {
@@ -398,14 +398,14 @@ knk.put("/pub/book/update/:id",async (req, res) => {
     //     }
     // });
 
-    const updatePubBook=await PublicationModel.findOneAndUpdate({
-        id:req.params.id
-    },{
-        $addToSet:{
-            books:req.body.newPubBook
+    const updatePubBook = await PublicationModel.findOneAndUpdate({
+        id: req.params.id
+    }, {
+        $addToSet: {
+            books: req.body.newPubBook
         }
-    },{
-        new:true
+    }, {
+        new: true
     })
 
     // updating the book data
@@ -417,15 +417,15 @@ knk.put("/pub/book/update/:id",async (req, res) => {
     //     }
     // });
 
-    const updateBookPub=await BookModel.findOneAndUpdate({
-        ISBN:req.body.newPubBook
-    },{
-        publication:req.params.id
-    },{
-        new:true
+    const updateBookPub = await BookModel.findOneAndUpdate({
+        ISBN: req.body.newPubBook
+    }, {
+        publication: req.params.id
+    }, {
+        new: true
     })
 
-    return (res.json({ publications: updatePubBook, books:updateBookPub, message: "Publications book data updated" }));
+    return (res.json({ publications: updatePubBook, books: updateBookPub, message: "Publications book data updated" }));
 })
 
 //----------------------------------------------------------------------
@@ -437,14 +437,19 @@ Access: public
 Parameters: /:isbn
 Method: DLELTE
 */
-knk.delete("/book/delete/:isbn", (req, res) => {
-    const updateBookData = database.books.filter((book) => {
-        return book.ISBN != req.params.isbn;
-    });
+knk.delete("/book/delete/:isbn", async (req, res) => {
 
-    database.books = updateBookData;
+    // const updateBookData = database.books.filter((book) => {
+    //     return book.ISBN != req.params.isbn;
+    // });
 
-    return (res.json({ books: database.books, message: "Book deleted" }))
+    // database.books = updateBookData;
+
+    const deleteBook = await BookModel.findOneAndDelete({
+        ISBN: req.params.isbn
+    })
+
+    return (res.json({ books: deleteBook, message: "Book deleted" }))
 })
 
 /*
@@ -454,30 +459,52 @@ Access: public
 Parameters: /:isbn, :id
 Method: DLELTE
 */
-knk.delete("/book/author/delete/:isbn/:id", (req, res) => {
+knk.delete("/book/author/delete/:isbn/:id", async (req, res) => {
     // Update the book database
-    database.books.forEach((book) => {
-        if (book.ISBN === req.params.isbn) {
-            const updateBookAuthor = book.authors.filter((author) => {
-                return author != parseInt(req.params.id);
-            });
-            book.authors = updateBookAuthor;
-            return;
+
+    // database.books.forEach((book) => {
+    //     if (book.ISBN === req.params.isbn) {
+    //         const updateBookAuthor = book.authors.filter((author) => {
+    //             return author != parseInt(req.params.id);
+    //         });
+    //         book.authors = updateBookAuthor;
+    //         return;
+    //     }
+    // });
+
+    const updateBook = await BookModel.findOneAndUpdate({
+        ISBN: req.params.isbn
+    }, {
+        $pull: {
+            authors: req.params.id
         }
-    });
+    }, {
+        new: true
+    })
 
-    // update the author database
-    database.authors.forEach((author) => {
-        if (author.id === parseInt(req.params.id)) {
-            const updateAuthorBook = author.books.filter((book) => {
-                return book != req.params.isbn;
-            });
-            author.books = updateAuthorBook;
-            return;
-        };
-    });
+    // update the author database  
 
-    return (res.json({ books: database.books, authors: database.authors, message: "Deleted" }));
+    // database.authors.forEach((author) => {
+    //     if (author.id === parseInt(req.params.id)) {
+    //         const updateAuthorBook = author.books.filter((book) => {
+    //             return book != req.params.isbn;
+    //         });
+    //         author.books = updateAuthorBook;
+    //         return;
+    //     };
+    // });
+
+    const updateAuthor = await AuthorModel.findOneAndUpdate({
+        id: req.params.id
+    }, {
+        $pull: {
+            books: req.params.isbn
+        }
+    }, {
+        new: true
+    })
+
+    return (res.json({ books: updateBook, authors: updateAuthor, message: "Deleted" }));
 
 })
 
@@ -488,14 +515,19 @@ Access: public
 Parameters: /:id
 Method: DLELTE
 */
-knk.delete("/author/delete/:id", (req, res) => {
-    const updateAuthorData = database.authors.filter((author) => {
-        return author.id != req.params.id;
-    });
+knk.delete("/author/delete/:id", async (req, res) => {
 
-    database.authors = updateAuthorData;
+    // const updateAuthorData = database.authors.filter((author) => {
+    //     return author.id != req.params.id;
+    // });
 
-    return (res.json({ books: database.authors, message: "Author deleted" }))
+    // database.authors = updateAuthorData;
+
+    const updateAuthor = await AuthorModel.findOneAndDelete({
+        id: req.params.id
+    })
+
+    return (res.json({ books: updateAuthor, message: "Author deleted" }))
 })
 
 /*
@@ -505,13 +537,18 @@ Access: public
 Parameters: /:id
 Method: DLELTE
 */
-knk.delete("/pub/delete/:id", (req, res) => {
-    const updatePublication = database.publications.filter((pub) => {
-        return pub.id !== parseInt(req.params.id);
-    })
-    database.publications = updatePublication;
+knk.delete("/pub/delete/:id", async (req, res) => {
 
-    return (res.json({ publications: database.publications, message: "Publication deleted" }));
+    // const updatePublication = database.publications.filter((pub) => {
+    //     return pub.id !== parseInt(req.params.id);
+    // })
+    // database.publications = updatePublication;
+
+    const updatePub = await PublicationModel.findOneAndDelete({
+        id: req.params.id
+    })
+
+    return (res.json({ publications: updatePub, message: "Publication deleted" }));
 })
 
 /*
@@ -521,27 +558,46 @@ Access: public
 Parameters: /:id ,/:isbn
 Method: DLELTE
 */
-knk.delete("/pub/book/delete/:id/:isbn", (req, res) => {
+knk.delete("/pub/book/delete/:id/:isbn",async(req, res) => {
     // update the publication database
-    database.publications.forEach((pub) => {
-        if (pub.id === parseInt(req.params.id)) {
-            const updatedPubBook = pub.books.filter((book) => {
-                book != req.params.isbn;
-                return;
-            })
-            pub.books = updatedPubBook;
-            return;
-        }
 
-    });
+    // database.publications.forEach((pub) => {
+    //     if (pub.id === parseInt(req.params.id)) {
+    //         const updatedPubBook = pub.books.filter((book) => {
+    //             book != req.params.isbn;
+    //             return;
+    //         })
+    //         pub.books = updatedPubBook;
+    //         return;
+    //     }
+    // });
+
+    const updatePubBook = await PublicationModel.findOneAndUpdate({
+        id: req.params.id
+    }, {
+        $pull: {
+            books: req.params.isbn
+        }
+    }, {
+        new: true
+    })
 
     // update the book database
-    database.books.forEach((book) => {
-        if (book.ISBN === req.params.isbn) {
-            return book.publication = 0;
-        }
+
+    // database.books.forEach((book) => {
+    //     if (book.ISBN === req.params.isbn) {
+    //         return book.publication = 0;
+    //     }
+    // })
+
+    const updateBookPub=await BookModel.findOneAndUpdate({
+        ISBN:req.params.isbn
+    },{
+        publication:0
+    },{
+        new:true
     })
 
 
-    return (res.json({ publications: database.publications, books: database.books, message: "Books deleted from the publications" }));
+    return (res.json({ publications:updatePubBook, books: updateBookPub, message: "Books deleted from the publications" }));
 })
